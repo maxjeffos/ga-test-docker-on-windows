@@ -8,6 +8,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    - name: Restart Docker in Experimental Mode
+      run: |
+        echo $'{"experimental": true}' | sudo dd status=none of=/etc/docker/daemon.json 
+        sudo service docker restart
+        docker version -f '{{.Server.Experimental}}' 
     - name: Pull Docker image
       run: docker pull debian:bullseye
     - name: Docker run
