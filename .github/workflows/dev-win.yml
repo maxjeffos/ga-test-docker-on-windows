@@ -8,12 +8,38 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+
+    # - name: Show Docker config file
+    #   run: |
+    #     type C:\ProgramData\Docker\config\daemon.json
+
+    # - name: WSL Update
+    #   run: wsl --update
+      
+    # - name: Show WSL version
+    #   run: wsl --status
+
+    - name: Install WSL Linux
+      run: wsl --install -d ubuntu
+
+    - name: WSL Show Version
+      run: wsl --list --verbose
+
+    # - name: Install WSL
+    #   run: wsl --install
+
+    
+
     - name: Restart Docker in Experimental Mode
       run: |
-        echo $'{"experimental": true}' | sudo dd status=none of=/etc/docker/daemon.json 
-        sudo service docker restart
-        docker version -f '{{.Server.Experimental}}' 
+        echo '{"experimental": true}' > C:\ProgramData\Docker\config\daemon.json
+        # echo $'{"experimental": true}' | dd status=none of=/etc/docker/daemon.json 
+        # service docker restart
+        restart-service *docker*
+        docker version -f '{{.Client.Experimental}}'
+        docker version -f '{{.Server.Experimental}}'
+
     - name: Pull Docker image
       run: docker pull debian:bullseye
     - name: Docker run
-      run: docker run debian:bullseye ls
+      run: docker run --platform linux ubuntu:latest ls
