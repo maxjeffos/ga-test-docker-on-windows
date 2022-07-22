@@ -1,0 +1,14 @@
+name: Dev
+
+on: push
+    
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Pull Docker image
+      run: docker pull debian:bullseye
+    - name: Docker run
+      run: docker run debian:bullseye ls
